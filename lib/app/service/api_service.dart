@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:netflix_clone/app/models/movie_model.dart';
 
@@ -41,6 +40,26 @@ class ApiService {
         return movies;
       } else {
         throw Exception('Failed to load now playing movies');
+      }
+    } catch (e) {
+      print(e.toString());
+      throw e;
+    }
+  }
+
+  //Get Top Rated
+  Future<List<Result>> getTopRatedMovies() async {
+    try {
+      final String endPoint = 'movie/top_rated';
+      final String url = '$baseUrl$endPoint?api_key=$apiKey';
+      final response = await http.get(Uri.parse(url));
+
+      if (response.statusCode == 200) {
+        Iterable it = jsonDecode(response.body)['results'];
+        List<Result> movie = it.map((e) => Result.fromJson(e)).toList();
+        return movie;
+      } else {
+        throw Exception('Failed to load top rated movies');
       }
     } catch (e) {
       print(e.toString());

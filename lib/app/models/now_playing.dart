@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 class NowPlayingModel {
   Dates dates;
   int page;

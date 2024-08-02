@@ -32,12 +32,61 @@ class HomeView extends GetView<HomeController> {
         ],
         centerTitle: true,
       ),
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Padding(
-            padding: EdgeInsets.only(left: 15, right: 15),
-            child: Text(
+      body: Padding(
+        padding: const EdgeInsets.only(left: 15, right: 15),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Expanded(
+              child: Obx(
+                () {
+                  if (controller.isLoading.value) {
+                    return const Center(child: CircularProgressIndicator());
+                  } else if (controller.topRated.isEmpty) {
+                    return const Center(
+                        child: Text('No Top Rated Movies Found',
+                            style: TextStyle(color: Colors.white)));
+                  } else {
+                    return PageView.builder(
+                      controller: controller.topRatedPageController,
+                      itemCount: controller.topRated.length,
+                      itemBuilder: (context, index) {
+                        var tv = controller.topRated[index];
+                        return Stack(
+                          children: [
+                            Image.network(
+                              '$imageUrl${tv.backdropPath}',
+                              fit: BoxFit.cover,
+                              width: double.infinity,
+                              height: double.infinity,
+                              errorBuilder: (context, error, stackTrace) {
+                                return const Center(
+                                    child:
+                                        Icon(Icons.error, color: Colors.red));
+                              },
+                            ),
+                            Positioned(
+                              bottom: 5,
+                              left: 5,
+                              child: Text(
+                                tv.originalTitle,
+                                style: const TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
+                          ],
+                        );
+                      },
+                    );
+                  }
+                },
+              ),
+            ),
+            const SizedBox(height: 20),
+            const Text(
               'Upcoming Movies',
               style: TextStyle(
                 fontSize: 20,
@@ -45,37 +94,101 @@ class HomeView extends GetView<HomeController> {
                 color: Colors.white,
               ),
             ),
-          ),
-          const SizedBox(height: 10),
-          Expanded(
-            child: Obx(() {
-              if (controller.isLoading.value) {
-                return const Center(child: CircularProgressIndicator());
-              } else {
-                return ListView.builder(
-                  scrollDirection: Axis.horizontal,
-                  itemCount: controller.upcomingMovies.length,
-                  itemBuilder: (context, index) {
-                    var movie = controller.upcomingMovies[index];
-                    return Container(
-                      width: 150,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Image.network(
-                            '$imageUrl${movie.posterPath}',
-                            fit: BoxFit.cover,
-                            height: 200,
+            const SizedBox(height: 10),
+            SizedBox(
+              height: 200,
+              child: Obx(
+                () {
+                  if (controller.isLoading.value) {
+                    return const Center(child: CircularProgressIndicator());
+                  } else if (controller.upcomingMovies.isEmpty) {
+                    return const Center(
+                        child: Text('No Upcoming Movies Found',
+                            style: TextStyle(color: Colors.white)));
+                  } else {
+                    return ListView.builder(
+                      scrollDirection: Axis.horizontal,
+                      itemCount: controller.upcomingMovies.length,
+                      itemBuilder: (context, index) {
+                        var movie = controller.upcomingMovies[index];
+                        return Container(
+                          width: 150,
+                          margin: const EdgeInsets.symmetric(horizontal: 8),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Image.network(
+                                '$imageUrl${movie.posterPath}',
+                                fit: BoxFit.cover,
+                                height: 200,
+                                errorBuilder: (context, error, stackTrace) {
+                                  return const Center(
+                                      child:
+                                          Icon(Icons.error, color: Colors.red));
+                                },
+                              ),
+                            ],
                           ),
-                        ],
-                      ),
+                        );
+                      },
                     );
-                  },
-                );
-              }
-            }),
-          ),
-        ],
+                  }
+                },
+              ),
+            ),
+            const SizedBox(height: 10),
+            const Text(
+              'Now Playing',
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+                color: Colors.white,
+              ),
+            ),
+            const SizedBox(height: 10),
+            SizedBox(
+              height: 200,
+              child: Obx(
+                () {
+                  if (controller.isLoading.value) {
+                    return const Center(child: CircularProgressIndicator());
+                  } else if (controller.nowplaying.isEmpty) {
+                    return const Center(
+                        child: Text('No Now Playing Movies Found',
+                            style: TextStyle(color: Colors.white)));
+                  } else {
+                    return ListView.builder(
+                      scrollDirection: Axis.horizontal,
+                      itemCount: controller.nowplaying.length,
+                      itemBuilder: (context, index) {
+                        var movie = controller.nowplaying[index];
+                        return Container(
+                          width: 150,
+                          margin: const EdgeInsets.symmetric(horizontal: 8),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Image.network(
+                                '$imageUrl${movie.posterPath}',
+                                fit: BoxFit.cover,
+                                height: 200,
+                                errorBuilder: (context, error, stackTrace) {
+                                  return const Center(
+                                      child:
+                                          Icon(Icons.error, color: Colors.red));
+                                },
+                              ),
+                            ],
+                          ),
+                        );
+                      },
+                    );
+                  }
+                },
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
