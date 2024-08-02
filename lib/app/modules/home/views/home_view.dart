@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:netflix_clone/app/modules/new/views/new_view.dart';
-import 'package:netflix_clone/app/modules/search_movie/views/search_movie_view.dart';
-
+import 'package:netflix_clone/app/service/utils.dart';
 import '../controllers/home_controller.dart';
 
 class HomeView extends GetView<HomeController> {
@@ -11,6 +9,7 @@ class HomeView extends GetView<HomeController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.black,
       appBar: AppBar(
         backgroundColor: Colors.black,
         title: Image.asset(
@@ -20,8 +19,8 @@ class HomeView extends GetView<HomeController> {
         ),
         actions: [
           Padding(
-            padding: const EdgeInsets.all(15),
-            child: InkWell(
+            padding: const EdgeInsets.only(left: 15, right: 15),
+            child: GestureDetector(
               onTap: () {},
               child: const Icon(
                 Icons.search,
@@ -33,55 +32,50 @@ class HomeView extends GetView<HomeController> {
         ],
         centerTitle: true,
       ),
-      body: Obx(
-        () => IndexedStack(
-          index: controller.currentIndex.value,
-          children: [
-            SingleChildScrollView(
-              child: Column(
-                children: [
-                  Text("HIIIII"),
-                ],
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Padding(
+            padding: EdgeInsets.only(left: 15, right: 15),
+            child: Text(
+              'Upcoming Movies',
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+                color: Colors.white,
               ),
             ),
-            SearchMovieView(),
-            NewView(),
-          ],
-        ),
-      ),
-      bottomNavigationBar: Obx(
-        () => BottomNavigationBar(
-          currentIndex: controller.currentIndex.value,
-          onTap: controller.changeTabIndex,
-          unselectedItemColor: Colors.white,
-          selectedItemColor: const Color(0xff17E6B7),
-          type: BottomNavigationBarType.fixed,
-          backgroundColor: Colors.black,
-          selectedLabelStyle: const TextStyle(
-            fontFamily: "Poppins",
-            fontSize: 8,
-            fontWeight: FontWeight.w500,
           ),
-          unselectedLabelStyle: const TextStyle(
-            fontFamily: "Poppins",
-            fontSize: 8,
-            fontWeight: FontWeight.w500,
+          const SizedBox(height: 10),
+          Expanded(
+            child: Obx(() {
+              if (controller.isLoading.value) {
+                return const Center(child: CircularProgressIndicator());
+              } else {
+                return ListView.builder(
+                  scrollDirection: Axis.horizontal,
+                  itemCount: controller.upcomingMovies.length,
+                  itemBuilder: (context, index) {
+                    var movie = controller.upcomingMovies[index];
+                    return Container(
+                      width: 150,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Image.network(
+                            '$imageUrl${movie.posterPath}',
+                            fit: BoxFit.cover,
+                            height: 200,
+                          ),
+                        ],
+                      ),
+                    );
+                  },
+                );
+              }
+            }),
           ),
-          items: const [
-            BottomNavigationBarItem(
-              icon: Icon(Icons.abc),
-              label: "Home",
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.abc),
-              label: "Comunity",
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.abc),
-              label: "Certificate",
-            ),
-          ],
-        ),
+        ],
       ),
     );
   }

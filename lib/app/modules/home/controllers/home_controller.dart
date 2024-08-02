@@ -1,20 +1,27 @@
-import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:netflix_clone/app/modules/home/views/home_view.dart';
-import 'package:netflix_clone/app/modules/new/views/new_view.dart';
-import 'package:netflix_clone/app/modules/search_movie/views/search_movie_view.dart';
+import 'package:netflix_clone/app/models/movie_model.dart';
+import 'package:netflix_clone/app/service/api_service.dart';
 
 class HomeController extends GetxController {
-  final selectedValueIndex = 0.obs;
-  final currentIndex = 0.obs;
+  var upcomingMovies = <Result>[].obs;
+  var nowplaying = <Result>[].obs;
+  var isLoading = true.obs;
 
-  final List<Widget> pages = [
-    HomeView(),
-    SearchMovieView(),
-    NewView(),
-  ];
+  @override
+  void onInit() {
+    super.onInit();
+    fetchUpcomingMovies();
+  }
 
-  void changeTabIndex(int index) {
-    currentIndex.value = index;
+  void fetchUpcomingMovies() async {
+    try {
+      isLoading(true);
+      var movies = await ApiService().getUpcomingMovies();
+      upcomingMovies.value = movies;
+    } catch (e) {
+      print(e.toString());
+    } finally {
+      isLoading(false);
+    }
   }
 }
