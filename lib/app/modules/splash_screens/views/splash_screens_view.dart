@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:lottie/lottie.dart';
-import 'package:netflix_clone/app/modules/home/views/home_view.dart';
 import 'package:netflix_clone/app/widgets/bottom_nav_bar.dart';
 import 'package:page_transition/page_transition.dart';
 import '../controllers/splash_screens_controller.dart';
@@ -25,7 +24,6 @@ class SplashScreensView extends GetView<SplashScreensController> {
     );
     return SafeArea(
       child: Scaffold(
-        backgroundColor: Colors.black,
         body: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,

@@ -1,23 +1,26 @@
 import 'package:get/get.dart';
+import 'package:netflix_clone/app/data/movie_model.dart';
+import 'package:netflix_clone/app/service/api_service.dart';
 
 class NewController extends GetxController {
-  //TODO: Implement NewController
+  var popularMovies = <Result>[].obs;
+  var isLoading = true.obs;
 
-  final count = 0.obs;
   @override
   void onInit() {
+    fetchPopularMovies();
     super.onInit();
   }
 
-  @override
-  void onReady() {
-    super.onReady();
+  void fetchPopularMovies() async {
+    try {
+      isLoading(true);
+      var movies = await ApiService().getPopulerMovies();
+      popularMovies.value = movies;
+    } catch (e) {
+      print(e.toString());
+    } finally {
+      isLoading(false);
+    }
   }
-
-  @override
-  void onClose() {
-    super.onClose();
-  }
-
-  void increment() => count.value++;
 }
