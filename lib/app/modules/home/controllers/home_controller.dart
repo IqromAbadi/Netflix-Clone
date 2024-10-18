@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:netflix_clone/app/models/movie_model.dart';
+import 'package:netflix_clone/app/data/movie_model.dart';
 import 'package:netflix_clone/app/service/api_service.dart';
 
 class HomeController extends GetxController {
@@ -53,14 +53,14 @@ class HomeController extends GetxController {
 
   void startAutoScroll() {
     if (topRated.isNotEmpty) {
-      pageTimer = Timer.periodic(const Duration(seconds: 3), (timer) {
+      pageTimer = Timer.periodic(const Duration(seconds: 5), (timer) {
         if (topRatedPageController.hasClients) {
           final page = (topRatedPageController.page ?? 0) + 1;
           if (page >= topRated.length) {
             topRatedPageController.jumpToPage(0);
           } else {
             topRatedPageController.nextPage(
-              duration: const Duration(milliseconds: 300),
+              duration: const Duration(milliseconds: 500),
               curve: Curves.easeInOut,
             );
           }

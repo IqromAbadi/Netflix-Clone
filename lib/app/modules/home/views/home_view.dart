@@ -9,27 +9,12 @@ class HomeView extends GetView<HomeController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.black,
       appBar: AppBar(
-        backgroundColor: Colors.black,
         title: Image.asset(
           "assets/netflix.png",
           width: 100,
           height: 50,
         ),
-        actions: [
-          Padding(
-            padding: const EdgeInsets.only(left: 15, right: 15),
-            child: GestureDetector(
-              onTap: () {},
-              child: const Icon(
-                Icons.search,
-                size: 30,
-                color: Colors.white,
-              ),
-            ),
-          )
-        ],
         centerTitle: true,
       ),
       body: Padding(
